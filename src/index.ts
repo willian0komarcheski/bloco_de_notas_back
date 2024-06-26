@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import mongoose from 'mongoose';
 import notaRoutes from './Routes/NotaRoutes';
+import cors from 'cors';
 
 const db = "mongodb+srv://willian:euodeiobancodedados123@cluster0.26xkzrv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
@@ -10,6 +11,7 @@ class App {
   constructor() {
     this.express = express();
     this.database();
+    this.configureCors();
     this.middlewares();
     this.routes();
 
@@ -28,9 +30,19 @@ class App {
     this.express.use(express.json());
   }
 
+  private configureCors(): void {
+    // Configuração para permitir todas as origens, métodos e cabeçalhos
+    this.express.use(cors({
+      origin: 'http://localhost:3000',
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    }));
+  }
+
   private routes(): void {
     this.express.use(notaRoutes);
   }
+
 }
 
 export default new App().express;
